@@ -56,24 +56,23 @@
 </body>
 
 <script>
-  "use strict";
+"use strict";
+  
   const commentsList = document.querySelector(".comments");
   const nameInput = document.querySelector(".add-form-name");
   const textInput = document.querySelector(".add-form-text");
   const addButton = document.querySelector(".add-form-button");
 
-  nameInput.addEventListener("input", () => { });
-  textInput.addEventListener("input", () => { });
-
   addButton.addEventListener("click", () => {
+      if (nameInput.value.trim() === "" || textInput.value.trim() === "") {
+      return; 
+    }
     const d = new Date();
-
     const dateStr = ("0" + d.getDate()).slice(-2) + "." +
       ("0" + (d.getMonth() + 1)).slice(-2) + "." +
       String(d.getFullYear()).slice(-2) + " " +
       ("0" + d.getHours()).slice(-2) + ":" +
       ("0" + d.getMinutes()).slice(-2);
-
     const newCommentHtml = `
     <li class="comment">
       <div class="comment-header">
