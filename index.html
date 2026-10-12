@@ -56,45 +56,111 @@
 </body>
 
 <script>
-"use strict";
-  
+  "use strict";
+
   const commentsList = document.querySelector(".comments");
   const nameInput = document.querySelector(".add-form-name");
   const textInput = document.querySelector(".add-form-text");
   const addButton = document.querySelector(".add-form-button");
 
+  const comments = [
+    {
+      name: "Глеб Фокин",
+      date: "12.02.22 12:18",
+      text: "Это будет первый комментарий на этой странице",
+      likes: 3,
+      isLiked: false,
+    },
+    {
+      name: "Варвара Н.",
+      date: "13.02.22 19:22",
+      text: "Мне нравится как оформлена эта страница! ❤",
+      likes: 75,
+      isLiked: true,
+    },
+  ];
+
+  const initLikeButtonsListeners = () => {
+    const likeButtons = document.querySelectorAll(".like-button");
+
+    likeButtons.forEach((likeButton) => {
+      likeButton.addEventListener("click", () => {
+        const index = likeButton.dataset.index;
+        const comment = comments[index];
+
+        if (comment.isLiked) {
+          comment.isLiked = false;
+          comment.likes -= 1;
+        } else {
+          comment.isLiked = true;
+          comment.likes += 1;
+        }
+
+        renderComments();
+      });
+    });
+  };
+
+  const renderComments = () => {
+    const commentsHtml = comments
+      .map((comment, index) => {
+        const likeClass = comment.isLiked ? "-active-like" : "";
+
+        return `
+        <li class="comment">
+          <div class="comment-header">
+            <div>${comment.name}</div>
+            <div>${comment.date}</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              ${comment.text}
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">${comment.likes}</span>
+              <button data-index="${index}" class="like-button ${likeClass}"></button>
+                </div>
+              </div>
+            </li>
+          `;
+      })
+      .join("");
+
+    commentsList.innerHTML = commentsHtml;
+    initLikeButtonsListeners();
+  };
+
   addButton.addEventListener("click", () => {
-      if (nameInput.value.trim() === "" || textInput.value.trim() === "") {
-      return; 
+    if (nameInput.value.trim() === "" || textInput.value.trim() === "") {
+      return;
     }
+
     const d = new Date();
-    const dateStr = ("0" + d.getDate()).slice(-2) + "." +
+    const dateStr =
+      ("0" + d.getDate()).slice(-2) + "." +
       ("0" + (d.getMonth() + 1)).slice(-2) + "." +
       String(d.getFullYear()).slice(-2) + " " +
       ("0" + d.getHours()).slice(-2) + ":" +
       ("0" + d.getMinutes()).slice(-2);
-    const newCommentHtml = `
-    <li class="comment">
-      <div class="comment-header">
-        <div>${nameInput.value}</div>
-        <div>${dateStr}</div>
-      </div>
-      <div class="comment-body">
-        <div class="comment-text">
-          ${textInput.value}
-        </div>
-      </div>
-      <div class="comment-footer">
-        <div class="likes">
-          <span class="likes-counter">0</span>
-          <button class="like-button"></button>
-        </div>
-      </div>
-    </li>
-  `;
 
-    commentsList.innerHTML = commentsList.innerHTML + newCommentHtml;
+    comments.push({
+      name: nameInput.value,
+      date: dateStr,
+      text: textInput.value,
+      likes: 0,
+      isLiked: false,
+    });
+
+    nameInput.value = "";
+    textInput.value = "";
+
+    renderComments();
   });
+
+  renderComments();
+
   console.log("It works!");
 </script>
 
