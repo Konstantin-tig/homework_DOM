@@ -55,68 +55,68 @@
       </div>
     </div>
   </div>
-</body>
-<script>
-  "use strict";
 
-  const commentsList = document.querySelector(".comments");
-  const nameInput = document.querySelector(".add-form-name");
-  const textInput = document.querySelector(".add-form-text");
-  const addButton = document.querySelector(".add-form-button");
+  <script>
+    "use strict";
 
-  const comments = [
-    {
-      name: "Глеб Фокин",
-      date: "12.02.22 12:18",
-      text: "Это будет первый комментарий на этой странице",
-      likes: 3,
-      isLiked: false,
-    },
-    {
-      name: "Варвара Н.",
-      date: "13.02.22 19:22",
-      text: "Мне нравится как оформлена эта страница! ❤",
-      likes: 75,
-      isLiked: true,
-    },
-  ];
+    const commentsList = document.querySelector(".comments");
+    const nameInput = document.querySelector(".add-form-name");
+    const textInput = document.querySelector(".add-form-text");
+    const addButton = document.querySelector(".add-form-button");
 
-  commentsList.addEventListener("click", (event) => {
-    const likeButton = event.target.closest(".like-button");
-    const commentItem = event.target.closest(".comment");
+    const comments = [
+      {
+        name: "Глеб Фокин",
+        date: "12.02.22 12:18",
+        text: "Это будет первый комментарий на этой странице",
+        likes: 3,
+        isLiked: false,
+      },
+      {
+        name: "Варвара Н.",
+        date: "13.02.22 19:22",
+        text: "Мне нравится как оформлена эта страница! ❤",
+        likes: 75,
+        isLiked: true,
+      },
+    ];
 
-    if (likeButton) {
-      event.stopPropagation();
+    commentsList.addEventListener("click", (event) => {
+      const likeButton = event.target.closest(".like-button");
+      const commentItem = event.target.closest(".comment");
 
-      const index = likeButton.dataset.index;
-      const comment = comments[index];
+      if (likeButton) {
+        event.stopPropagation();
 
-      if (comment.isLiked) {
-        comment.isLiked = false;
-        comment.likes -= 1;
-      } else {
-        comment.isLiked = true;
-        comment.likes += 1;
+        const index = likeButton.dataset.index;
+        const comment = comments[index];
+
+        if (comment.isLiked) {
+          comment.isLiked = false;
+          comment.likes -= 1;
+        } else {
+          comment.isLiked = true;
+          comment.likes += 1;
+        }
+
+        renderComments();
+        return;
       }
 
-      renderComments();
-      return;
-    }
+      if (commentItem) {
+        const index = commentItem.dataset.index;
+        const comment = comments[index];
 
-    if (commentItem) {
-      const index = commentItem.dataset.index;
-      const comment = comments[index];
+        textInput.value = `> ${comment.text}\n\n${comment.name}, `;
+        textInput.focus();
+      }
+    });
 
-      textInput.value = `> ${comment.text}\n\n${comment.name}, `;
-      textInput.focus();
-    }
-  });
-
-  const renderComments = () => {
-    const commentsHtml = comments
-      .map((comment, index) => {
-        const likeClass = comment.isLiked ? "-active-like" : "";
-        return `
+    const renderComments = () => {
+      const commentsHtml = comments
+        .map((comment, index) => {
+          const likeClass = comment.isLiked ? "-active-like" : "";
+          return `
             <li class="comment" data-index="${index}">
               <div class="comment-header">
                 <div>${comment.name}</div>
@@ -135,14 +135,30 @@
               </div>
             </li>
           `;
-      })
-      .join("");
+        })
+        .join("");
 
-    commentsList.innerHTML = commentsHtml;
-  };
+      commentsList.innerHTML = commentsHtml;
+    };
 
-  addButton.addEventListener("click", () => {
-    if (nameInput.value.trim() === "" || textInput.value.trim() === "") {
+    addButton.addEventListener("click", () => {
+
+      nameInput.style.backgroundColor = "";
+      textInput.style.backgroundColor = "";
+
+      if (nameInput.value.trim() === "" || textInput.value.trim() === "") {
+        nameInput.style.backgroundColor = "#ffcccc";
+        textInput.style.backgroundColor = "#ffcccc";
+        return;
+      }
+
+    
+      if (nameInput.value.trim() === "") {
+      nameInput.style.backgroundColor = "#ffcccc";
+      return;
+    }
+    if (textInput.value.trim() === "") {
+      textInput.style.backgroundColor = "#ffcccc";
       return;
     }
 
@@ -178,10 +194,14 @@
     textInput.value = "";
 
     renderComments();
-  });
+    });
 
-  renderComments();
-  console.log("It works!");
-</script>
+    nameInput.addEventListener("input", () => nameInput.style.backgroundColor = "");
+    textInput.addEventListener("input", () => textInput.style.backgroundColor = "");
+
+    renderComments();
+    console.log("It works!");
+  </script>
+</body>
 
 </html>
